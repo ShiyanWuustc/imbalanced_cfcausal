@@ -34,7 +34,10 @@ conformalIteNaive <- function(X, Y, T,
                         psfun, psparams,
                         useCV,
                         trainprop,
-                        nfolds)
+                        nfolds,
+                       ps_resample_method = "prob2",
+                    ps_resample_seed = 123,
+                    ps_resample_rho = NULL)
     Y1_CIfun <- function(X, alpha, wthigh, wtlow, useInf){
         predict(obj1, X, alpha = alpha / 2,
                 wthigh = wthigh, wtlow = wtlow,
