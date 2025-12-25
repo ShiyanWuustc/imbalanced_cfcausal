@@ -1,4 +1,4 @@
-Package: imbalanced_cfcausal
+Package: imbalancedcfcausal
 Type: Package
 Title: Conformal inference of counterfactuals and individual treatment effects
 Version: 0.2.1.8888
