@@ -194,7 +194,7 @@ conformalIte <- function(X, Y, T,
                          useInf = FALSE,
                         ps_resample_method_y1 = "no",
 ps_resample_seed_y1 = NULL,
-ps_resample_rho_y1 = NULL,){
+ps_resample_rho_y1 = NULL){
     ## Check the format
     type <- type[1]
     stopifnot(type %in% c("CQR", "mean"))
