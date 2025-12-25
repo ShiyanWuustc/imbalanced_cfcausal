@@ -191,7 +191,10 @@ conformalIte <- function(X, Y, T,
                          trainprop = 0.75,
                          nfolds = 10,
                          wthigh = 20, wtlow = 0.05,
-                         useInf = FALSE){
+                         useInf = FALSE,
+                        ps_resample_method_y1 = "no",
+ps_resample_seed_y1 = NULL,
+ps_resample_rho_y1 = NULL,){
     ## Check the format
     type <- type[1]
     stopifnot(type %in% c("CQR", "mean"))
@@ -262,7 +265,10 @@ conformalIte <- function(X, Y, T,
                                 useCV,
                                 trainprop, nfolds,
                                 wthigh, wtlow,
-                                useInf)
+                                useInf,
+                               ps_resample_method_y1 = ps_resample_method_y1,
+                        ps_resample_seed_y1 = ps_resample_seed_y1,
+                        ps_resample_rho_y1 = ps_resample_rho_y1)
         function(X){
             predict(obj, X)
         }
@@ -273,7 +279,10 @@ conformalIte <- function(X, Y, T,
                                  outfun, outparams,
                                  psfun, psparams,
                                  useCV,
-                                 trainprop, nfolds)
+                                 trainprop, nfolds,
+                                ps_resample_method_y1 = ps_resample_method_y1,
+                        ps_resample_seed_y1 = ps_resample_seed_y1,
+                        ps_resample_rho_y1 = ps_resample_rho_y1)
         function(X){
             predict(obj, X, alpha, wthigh, wtlow, useInf)$Ite
         }
@@ -284,7 +293,10 @@ conformalIte <- function(X, Y, T,
                               outfun, outparams,
                               psfun, psparams,
                               useCV,
-                              trainprop, nfolds)
+                              trainprop, nfolds,
+                             ps_resample_method_y1 = ps_resample_method_y1,
+                        ps_resample_seed_y1 = ps_resample_seed_y1,
+                        ps_resample_rho_y1 = ps_resample_rho_y1)
         function(X, Y, T){
             predict(obj, X, Y, T, alpha, wthigh, wtlow, useInf)
         }
