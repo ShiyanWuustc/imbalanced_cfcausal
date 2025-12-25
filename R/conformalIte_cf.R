@@ -7,7 +7,10 @@ conformalIteCf <- function(X, Y, T,
                            psfun, psparams,
                            useCV,
                            trainprop,
-                           nfolds){
+                           nfolds,
+                          ps_resample_method_y1 = "no",
+                           ps_resample_seed_y1 = NULL,
+                           ps_resample_rho_y1 = NULL){
     obj <- conformalIteNaive(X, Y, T,
                              type, side,
                              quantiles,
@@ -15,7 +18,10 @@ conformalIteCf <- function(X, Y, T,
                              psfun, psparams,
                              useCV,
                              trainprop,
-                             nfolds)
+                             nfolds,
+                            ps_resample_method_y1 = ps_resample_method_y1,
+                         ps_resample_seed_y1 = ps_resample_seed_y1,
+                         ps_resample_rho_y1 = ps_resample_rho_y1)
 
     CIfun <- function(X, Y, T,
                       alpha, wthigh, wtlow, useInf){
