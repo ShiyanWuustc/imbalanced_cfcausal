@@ -5,7 +5,10 @@ conformalCf_CV <- function(X, Y,
                            quantiles,
                            outfun, outparams,
                            psfun, psparams,
-                           nfolds){
+                           nfolds,
+                          ps_resample_method = "no",
+                              ps_resample_seed = NULL,
+                              ps_resample_rho = NULL){
     T <- as.numeric(!is.na(Y))
     inds1 <- which(T == 1)
     inds0 <- which(T == 0)
