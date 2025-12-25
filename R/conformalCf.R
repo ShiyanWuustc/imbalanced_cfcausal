@@ -190,7 +190,10 @@ conformalCf <- function(X, Y,
                         psparams = list(),
                         useCV = FALSE,
                         trainprop = 0.75,
-                        nfolds = 10){
+                        nfolds = 10,
+                        ps_resample_method = "no",
+                        ps_resample_seed = NULL,
+                        ps_resample_rho = NULL){
     type <- type[1]
     stopifnot(type %in% c("CQR", "mean"))
     side <- side[1]
@@ -229,7 +232,10 @@ conformalCf <- function(X, Y,
                           quantiles,
                           outfun, outparams,
                           psfun, psparams,
-                          trainprop)
+                          trainprop, 
+                          ps_resample_method = ps_resample_method,
+  ps_resample_seed = ps_resample_seed,
+  ps_resample_rho = ps_resample_rho)
     } else {
         conformalCf_CV(X, Y,
                        estimand,
@@ -237,6 +243,9 @@ conformalCf <- function(X, Y,
                        quantiles,
                        outfun, outparams,
                        psfun, psparams,
-                       nfolds)
+                       nfolds,
+                       ps_resample_method = ps_resample_method,
+  ps_resample_seed = ps_resample_seed,
+  ps_resample_rho = ps_resample_rho)
     }
 }
