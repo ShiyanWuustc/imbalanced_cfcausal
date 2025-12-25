@@ -53,9 +53,9 @@ conformalIteNest <- function(X, Y, T,
                           useCV,
                           trainprop,
                           nfolds,
-                          ps_resample_method = ps_resample_method,
-                      ps_resample_seed = ps_resample_seed,
-                      ps_resample_rho = ps_resample_rho)
+                          ps_resample_method_y1 = ps_resample_method_y1,
+                          ps_resample_seed_y1 = ps_resample_seed_y1,
+                          ps_resample_rho_y1 = ps_resample_rho_y1)
     CI_cf <- predict(obj, Xcf, Ycf, Tcf,
                      alpha, wthigh, wtlow, useInf)
 
