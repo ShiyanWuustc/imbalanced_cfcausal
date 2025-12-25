@@ -6,9 +6,10 @@ conformalCf_CV <- function(X, Y,
                            outfun, outparams,
                            psfun, psparams,
                            nfolds,
-                          ps_resample_method = "no",
-                              ps_resample_seed = NULL,
-                              ps_resample_rho = NULL){
+                           ps_resample_method = "no",
+                           ps_resample_seed = NULL,
+                           ps_resample_rho = NULL){
+
     T <- as.numeric(!is.na(Y))
     inds1 <- which(T == 1)
     inds0 <- which(T == 0)
@@ -24,22 +25,58 @@ conformalCf_CV <- function(X, Y,
     })
 
     psparams0 <- psparams
+
     if (estimand == "unconditional"){
         wtfun <- lapply(1:nfolds, function(k){
             testid <- idlist[[k]]
-            Xtrain <- X[-testid, ,drop=FALSE]
+            Xtrain <- X[-testid, , drop = FALSE]
             Ttrain <- T[-testid]
-            psparams <- c(list(Y = Ttrain, X = Xtrain), psparams0)
+
+            # ===== NEW: resample only for propensity score fitting =====
+            Xtrain_ps <- Xtrain
+            Ttrain_ps <- Ttrain
+            if (ps_resample_method != "no") {
+                idx_ps <- resample_idx_ps(
+                    method = ps_resample_method,
+                    X = Xtrain_ps,
+                    T = Ttrain_ps,
+                    rho = ps_resample_rho,
+                    seed = ps_resample_seed
+                )
+                Xtrain_ps <- Xtrain_ps[idx_ps, , drop = FALSE]
+                Ttrain_ps <- Ttrain_ps[idx_ps]
+            }
+            # ==========================================================
+
+            psparams <- c(list(Y = Ttrain_ps, X = Xtrain_ps), psparams0)
             function(X){
                 ps <- do.call(psfun, c(psparams, list(Xtest = X)))
                 1 / ps
             }
         })
-        psparams <- c(list(Y = T, X = X), psparams0)
+
+        # ===== NEW: also resample for the global wtfun_test fit =====
+        X_ps <- X
+        T_ps <- T
+        if (ps_resample_method != "no") {
+            idx_ps_all <- resample_idx_ps(
+                method = ps_resample_method,
+                X = X_ps,
+                T = T_ps,
+                rho = ps_resample_rho,
+                seed = ps_resample_seed
+            )
+            X_ps <- X_ps[idx_ps_all, , drop = FALSE]
+            T_ps <- T_ps[idx_ps_all]
+        }
+        psparams <- c(list(Y = T_ps, X = X_ps), psparams0)
+        # ==========================================================
+
         wtfun_test <- function(X){
             ps <- do.call(psfun, c(psparams, list(Xtest = X)))
             1 / ps
         }
+
     } else if (estimand == "nonmissing"){
         wtfun_test <- function(X){
             rep(1, nrow(X))
@@ -47,25 +84,60 @@ conformalCf_CV <- function(X, Y,
         wtfun <- lapply(1:nfolds, function(k){
             wtfun_test
         })
+
     } else if (estimand == "missing"){
         wtfun <- lapply(1:nfolds, function(k){
             testid <- idlist[[k]]
-            Xtrain <- X[-testid, ,drop=FALSE]
+            Xtrain <- X[-testid, , drop = FALSE]
             Ttrain <- T[-testid]
-            psparams <- c(list(Y = Ttrain, X = Xtrain), psparams0)
+
+            # ===== NEW: resample only for propensity score fitting =====
+            Xtrain_ps <- Xtrain
+            Ttrain_ps <- Ttrain
+            if (ps_resample_method != "no") {
+                idx_ps <- resample_idx_ps(
+                    method = ps_resample_method,
+                    X = Xtrain_ps,
+                    T = Ttrain_ps,
+                    rho = ps_resample_rho,
+                    seed = ps_resample_seed
+                )
+                Xtrain_ps <- Xtrain_ps[idx_ps, , drop = FALSE]
+                Ttrain_ps <- Ttrain_ps[idx_ps]
+            }
+            # ==========================================================
+
+            psparams <- c(list(Y = Ttrain_ps, X = Xtrain_ps), psparams0)
             function(X){
                 ps <- do.call(psfun, c(psparams, list(Xtest = X)))
                 (1 - ps) / ps
             }
         })
-        psparams <- c(list(Y = T, X = X), psparams0)
+
+        # ===== NEW: also resample for the global wtfun_test fit =====
+        X_ps <- X
+        T_ps <- T
+        if (ps_resample_method != "no") {
+            idx_ps_all <- resample_idx_ps(
+                method = ps_resample_method,
+                X = X_ps,
+                T = T_ps,
+                rho = ps_resample_rho,
+                seed = ps_resample_seed
+            )
+            X_ps <- X_ps[idx_ps_all, , drop = FALSE]
+            T_ps <- T_ps[idx_ps_all]
+        }
+        psparams <- c(list(Y = T_ps, X = X_ps), psparams0)
+        # ==========================================================
+
         wtfun_test <- function(X){
             ps <- do.call(psfun, c(psparams, list(Xtest = X)))
             (1 - ps) / ps
         }
     }
 
-    X <- X[inds1, ,drop=FALSE]
+    X <- X[inds1, , drop = FALSE]
     Y <- Y[inds1]
     res <- conformalCV(X, Y,
                        type, side,
