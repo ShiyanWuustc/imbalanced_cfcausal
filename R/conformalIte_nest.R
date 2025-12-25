@@ -16,9 +16,9 @@ conformalIteNest <- function(X, Y, T,
                              nfolds,
                              wthigh, wtlow,
                              useInf,
-                            ps_resample_method = "no",
-ps_resample_seed = NULL,
-ps_resample_rho = NULL){
+                             ps_resample_method_y1 = "no",
+                             ps_resample_seed_y1 = NULL,
+                             ps_resample_rho_y1 = NULL){
     ## Reset effective alpha based on exact
     if (exact){
         alpha <- alpha / 2
